@@ -1,0 +1,59 @@
+<section>
+    <div class="container m-2">
+        <h2>Place Order</h2>
+        <div class=" row  ">
+            <form id="checkout-form">
+                <div class="col-xs-6 col-sm-6 col-md-6  m-2 ">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1"> Address</label>
+                        <input type="text" class="form-control" placeholder="Enter Address" name="address">
+
+                    </div>
+                    <div class="form-group">
+                        <label for="">Pin code</label>
+                        <input type="number" class="form-control" placeholder="Pincode" name="pincode">
+                    </div>
+                    <div class="form-group">
+                        <label for="">Phone</label>
+                        <input type="number" class="form-control" placeholder="Phone" name="phone">
+                    </div>
+                    <input type="text" name="userId" hidden value="{{user._id}}">
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-6 border m-2 justify-content-end">
+                    <div class="form-group p-3">
+                        <h3>Total Amount:$ {{total}}/- </h3>
+                    </div>
+                    <hr>
+                    <div class="form-group p-3">
+                        <h4>Payment Method </h4>
+                        <div class=" align-middle">
+                            <input type="radio" name="payment" value="COD" checked>
+                            <label for="html">COD</label><br>
+                            <input type="radio" name="payment" value="Online-payment">
+                            <label for="css">Online Payment</label><br>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Check me out</button>
+
+                </div>
+            </form>
+        </div>
+    </div>
+    </div>
+</section>
+<script>
+$('#checkout-form').submit((e) => {
+    e.preventDefault()
+    $.ajax({
+        url: '/place-order',
+        method: 'post',
+        data: $('#checkout-form').serialize(),
+        success: (response) => {
+            alert(response)
+            if(response.status){
+                location.href='/view-myorders'
+            }
+        }
+    })
+})
+</script>
