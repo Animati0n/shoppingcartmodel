@@ -1,5 +1,5 @@
-var db = require('../DBconfig/connection')
-var collections = require('../DBconfig/collections');
+const db = require('../DBconfig/connection')
+const collections = require('../DBconfig/collections');
 const { ObjectId } = require('mongodb');
 module.exports = {
     addProdect: (product) => {

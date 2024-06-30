@@ -1,23 +1,23 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
 
-var hbs=require('express-handlebars');
-var fileUpload=require('express-fileupload')
+const hbs=require('express-handlebars');
+const fileUpload=require('express-fileupload')
 
-var session=require('express-session')
+const session=require('express-session')
 
-var db=require('./DBconfig/connection')
+const db=require('./DBconfig/connection')
 
-var userRouter = require('./routes/user');
-var adminRouter = require('./routes/admin');
+const userRouter = require('./routes/user');
+const adminRouter = require('./routes/admin');
 
-var app = express();
+const app = express();
 
 
-// var handleBars=exphbs.create({extname:'hbs',defaultLayout:'layout',layoutsDir:__dirname+'/views/layouts/',partialsDir:__dirname+'/views/partials/'})
+// const handleBars=exphbs.create({extname:'hbs',defaultLayout:'layout',layoutsDir:__dirname+'/views/layouts/',partialsDir:__dirname+'/views/partials/'})
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');

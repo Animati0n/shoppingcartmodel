@@ -1,7 +1,7 @@
 <section>
     <div class="container m-2">
-        <h2>Place Order</h2>
-        <div class=" row  ">
+        <h2 class="text-center">Place Order</h2>
+        <div class=" row">
             <form id="checkout-form">
                 <div class="col-xs-6 col-sm-6 col-md-6  m-2 ">
                     <div class="form-group">
@@ -19,7 +19,7 @@
                     </div>
                     <input type="text" name="userId" hidden value="{{user._id}}">
                 </div>
-                <div class="col-xs-6 col-sm-6 col-md-6 border m-2 justify-content-end">
+                <div class="col-xs-6 col-sm-6 col-md-6 border ">
                     <div class="form-group p-3">
                         <h3>Total Amount:$ {{total}}/- </h3>
                     </div>
@@ -42,18 +42,78 @@
     </div>
 </section>
 <script>
-$('#checkout-form').submit((e) => {
-    e.preventDefault()
-    $.ajax({
-        url: '/place-order',
-        method: 'post',
-        data: $('#checkout-form').serialize(),
-        success: (response) => {
-            alert(response)
-            if(response.status){
-                location.href='/view-myorders'
+    $('#checkout-form').submit((e) => {
+        e.preventDefault()
+        $.ajax({
+            url: '/place-order',
+            method: 'post',
+            data: $('#checkout-form').serialize(),
+            success: (response) => {
+                console.log("response:", response)
+                alert(response)
+                if (response.codSuccess) {
+                    console.log('inside true')
+                    location.href = '/view-myorders'
+                } else {
+                    console.log("false")
+                    razorpayMent(response)
+                }
             }
-        }
+        })
     })
-})
+    function razorpayMent(order) {
+        const options = {
+            "key": '{{razorKeyId}}', // Enter the Key ID generated from the Dashboard
+            "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+            "currency": "INR",
+            "name": "Shopping Cart",
+            "description": "Test Transaction",
+            "image": "https://example.com/your_logo",
+            "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+            "handler": function (response) {
+
+
+                verifyPayment(response, order)
+            },
+            "prefill": {
+                "name": "{{user.name}}",
+                "email": "{{user.name}}",
+                "contact": "{{user.name}}"
+            },
+            "notes": {
+                "address": "Razorpay Corporate Office"
+            },
+            "theme": {
+                "color": "#3399cc"
+            }
+        };
+        const rzp1 = new Razorpay(options);
+        rzp1.on('payment.failed', function (response) {
+            alert(response.error.code);
+            alert(response.error.description);
+            alert(response.error.source);
+            alert(response.error.step);
+            alert(response.error.reason);
+            alert(response.error.metadata.order_id);
+            alert(response.error.metadata.payment_id);
+        });
+        rzp1.open();
+    }
+    function verifyPayment(payment, order) {
+        $.ajax({
+            url: '/verifyPayment',
+            method: 'post',
+            data: {
+                payment,
+                order
+            },
+            success: (response) => {
+                if (response.status) {
+                    location.href = '/view-myorders'
+                } else {
+                    alert("Payment faild")
+                }
+            }
+        })
+    }
 </script>

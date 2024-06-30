@@ -1,8 +1,9 @@
-var express = require('express');
+const express = require('express');
 const { response } = require('../app');
-var router = express.Router();
-var productHelper = require('../helpers/product-helper')
-var userHelper = require('../helpers/user-helper')
+const router = express.Router();
+const productHelper = require('../helpers/product-helper')
+const userHelper = require('../helpers/user-helper');
+const envConstants = require('../envConstants');
 
 const verifyLogin = (req, res, next) => {
   if (req.session.loggIn) {
@@ -115,7 +116,7 @@ router.get('/place-order', verifyLogin, async (req, res) => {
   // console.log(req.session.user._id);
   let total = await userHelper.getTotalAmount(req.session.user._id)
   // console.log(t otal)
-  res.render('user/place-order', { user: req.session.user, total })
+  res.render('user/place-order', { user: req.session.user, total,razorKeyId:envConstants.razorKeyId })
 })
 
 router.get('/removeCart/:id', verifyLogin, (req, res) => {
